@@ -1,2 +1,0 @@
-# truthcheck
-truthcheck-ai
