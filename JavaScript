@@ -1,143 +1,92 @@
-
-const newsInput = document.getElementById("news");
-const checkBtn = document.getElementById("checkBtn");
-const clearBtn = document.getElementById("clearBtn");
+const news = document.getElementById("news");
 const result = document.getElementById("result");
 const counter = document.getElementById("counter");
 
-newsInput.addEventListener("input", () => {
-  counter.textContent = `${newsInput.value.length} / 10000 characters`;
+news.addEventListener("input", () => {
+  counter.textContent = `${news.value.length} / 10000 characters`;
 });
 
-function showResult(type, icon, title, message, tips) {
-  result.className = `result ${type}`;
-
+function displayResult(type, icon, title, message, tips) {
+  result.className = "result " + type;
   result.replaceChildren();
 
-  const resultIcon = document.createElement("div");
-  resultIcon.className = "result-icon";
-  resultIcon.textContent = icon;
+  const iconEl = document.createElement("div");
+  iconEl.className = "result-icon";
+  iconEl.textContent = icon;
 
   const heading = document.createElement("h2");
   heading.textContent = title;
 
-  const description = document.createElement("p");
-  description.textContent = message;
+  const paragraph = document.createElement("p");
+  paragraph.textContent = message;
 
   const list = document.createElement("ul");
 
-  tips.forEach((tip) => {
+  tips.forEach(tip => {
     const item = document.createElement("li");
     item.textContent = tip;
     list.appendChild(item);
   });
 
-  result.append(resultIcon, heading, description, list);
+  result.append(iconEl, heading, paragraph, list);
 }
 
-checkBtn.addEventListener("click", () => {
-  const text = newsInput.value.trim();
+document.getElementById("checkBtn").addEventListener("click", () => {
+  const text = news.value.trim().toLowerCase();
 
   if (text.length < 20) {
-    showResult(
-      "",
-      "✍️",
-      "Please enter more news",
-      "Enter at least 20 characters for this demonstration.",
-      ["Paste a complete headline or a short article."]
-    );
+    displayResult("", "✍️", "Enter more news",
+      "Please enter at least 20 characters.",
+      ["Paste a headline or a short news article."]);
     return;
   }
 
-  const content = text.toLowerCase();
-
-  const sensationalPhrases = [
+  const warnings = [
     "shocking",
-    "unbelievable",
-    "secret they don't want you to know",
-    "100% guaranteed",
     "miracle cure",
+    "100% guaranteed",
     "share immediately",
-    "breaking",
     "you won't believe",
+    "secret they don't want you to know",
     "forward to everyone",
-    "government confirmed"
-  ];
-
-  const absoluteClaims = [
-    "always works",
     "no side effects",
-    "100 percent true",
-    "everyone must",
     "guaranteed cure"
   ];
 
-  const warningMatches = sensationalPhrases.filter(
-    phrase => content.includes(phrase)
-  );
+  const matches = warnings.filter(word => text.includes(word));
 
-  const absoluteMatches = absoluteClaims.filter(
-    phrase => content.includes(phrase)
-  );
-
-  const warnings = warningMatches.length + absoluteMatches.length;
-
-  if (warnings >= 2) {
-    showResult(
-      "fake",
-      "🚩",
-      "High-Risk Language Detected",
-      "This text contains multiple sensational or absolute claims. That does not prove the news is fake.",
-      [
-        "Find the original source.",
-        "Look for independent confirmation.",
-        "Check evidence before sharing."
-      ]
-    );
-  } else if (warnings === 1) {
-    showResult(
-      "suspicious",
-      "⚠️",
-      "Needs Further Verification",
-      "A warning phrase was found. The claim has not been verified as true or false.",
-      [
-        "Check the publisher and publication date.",
-        "Compare the claim with reliable reporting.",
-        "Find supporting evidence or an official statement."
-      ]
-    );
+  if (matches.length >= 2) {
+    displayResult("fake", "🚩", "Multiple warning phrases",
+      "This text uses multiple warning phrases. That does not prove it is fake.",
+      ["Find the original source.", "Check independent reports.",
+       "Verify evidence before sharing."]);
+  } else if (matches.length === 1) {
+    displayResult("suspicious", "⚠️", "Further checking needed",
+      "A warning phrase was found. The claim has not been verified.",
+      ["Check the author and date.", "Compare trusted news sources.",
+       "Look for evidence supporting the claim."]);
   } else {
-    showResult(
-      "genuine",
-      "🔎",
-      "No Listed Warning Phrases Found",
-      "This text did not trigger the demo's keyword rules. This is not evidence that the news is genuine.",
-      [
-        "Verify the original source.",
-        "Check trustworthy independent sources.",
-        "Confirm names, dates, statistics, and context."
-      ]
-    );
+    displayResult("genuine", "🔎", "No listed warning phrases",
+      "No demo warning phrases were found. This does not prove the story is genuine.",
+      ["Verify the original source.", "Check independent reporting.",
+       "Confirm dates, figures and context."]);
   }
 });
 
-clearBtn.addEventListener("click", () => {
-  newsInput.value = "";
+document.getElementById("clearBtn").addEventListener("click", () => {
+  news.value = "";
   counter.textContent = "0 / 10000 characters";
 
-  result.className = "result";
-  result.replaceChildren();
-
-  const icon = document.createElement("div");
-  icon.className = "result-icon";
-  icon.textContent = "🔎";
-
-  const heading = document.createElement("h2");
-  heading.textContent = "Ready to investigate?";
-
-  const description = document.createElement("p");
-  description.textContent = "Your analysis will appear here.";
-
-  result.append(icon, heading, description);
-  newsInput.focus();
+  displayResult("", "🔎", "Ready to investigate?",
+    "Your result will appear here.", []);
+  news.focus();
 });
+
+// Register the offline service worker on the published HTTPS site.
+if ("serviceWorker" in navigator && location.protocol === "https:") {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch(error => {
+      console.error("Offline setup failed:", error);
+    });
+  });
+}
