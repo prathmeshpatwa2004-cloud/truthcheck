@@ -1,0 +1,46 @@
+
+<div class="app">
+  <header class="hero">
+    <div class="logo">📰 TruthCheck AI</div>
+    <p class="tagline">Stop. Check. Verify.</p>
+    <h1>Fake News Detection</h1>
+    <p>Think before you share. Check the news before you believe it.</p>
+    <span class="pill">AI News Analysis Demo</span>
+  </header>
+
+  <main class="panel">
+    <label for="news">Paste a headline or news article</label>
+    <textarea id="news" placeholder="Example: Scientists announce a new discovery. Paste the news you want to check here..." maxlength="10000"></textarea>
+
+    <div class="actions">
+      <button id="checkBtn">🔍 Check News</button>
+      <button id="clearBtn" class="secondary">Clear</button>
+    </div>
+
+    <p id="counter">0 / 10000 characters</p>
+
+    <div id="result" class="result" aria-live="polite">
+      <div class="result-icon">🔎</div>
+      <h2>Ready to investigate?</h2>
+      <p>Your analysis will appear here.</p>
+    </div>
+
+    <section class="tips">
+      <h2>🛡️ How to verify news</h2>
+      <ul>
+        <li>Check the original source and author.</li>
+        <li>Look for the same story in trusted news outlets.</li>
+        <li>Verify the date, images, and supporting evidence.</li>
+        <li>Be cautious of sensational headlines.</li>
+      </ul>
+    </section>
+
+    <p class="disclaimer">
+      Disclaimer: This is an educational demo, not a real AI fact-checker.
+      Its classifications can be incorrect. Always verify information
+      using reliable sources.
+    </p>
+  </main>
+
+  <footer>TruthCheck AI · Verify before you share © 2026</footer>
+</div>
