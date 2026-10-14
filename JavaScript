@@ -1,0 +1,143 @@
+
+const newsInput = document.getElementById("news");
+const checkBtn = document.getElementById("checkBtn");
+const clearBtn = document.getElementById("clearBtn");
+const result = document.getElementById("result");
+const counter = document.getElementById("counter");
+
+newsInput.addEventListener("input", () => {
+  counter.textContent = `${newsInput.value.length} / 10000 characters`;
+});
+
+function showResult(type, icon, title, message, tips) {
+  result.className = `result ${type}`;
+
+  result.replaceChildren();
+
+  const resultIcon = document.createElement("div");
+  resultIcon.className = "result-icon";
+  resultIcon.textContent = icon;
+
+  const heading = document.createElement("h2");
+  heading.textContent = title;
+
+  const description = document.createElement("p");
+  description.textContent = message;
+
+  const list = document.createElement("ul");
+
+  tips.forEach((tip) => {
+    const item = document.createElement("li");
+    item.textContent = tip;
+    list.appendChild(item);
+  });
+
+  result.append(resultIcon, heading, description, list);
+}
+
+checkBtn.addEventListener("click", () => {
+  const text = newsInput.value.trim();
+
+  if (text.length < 20) {
+    showResult(
+      "",
+      "✍️",
+      "Please enter more news",
+      "Enter at least 20 characters for this demonstration.",
+      ["Paste a complete headline or a short article."]
+    );
+    return;
+  }
+
+  const content = text.toLowerCase();
+
+  const sensationalPhrases = [
+    "shocking",
+    "unbelievable",
+    "secret they don't want you to know",
+    "100% guaranteed",
+    "miracle cure",
+    "share immediately",
+    "breaking",
+    "you won't believe",
+    "forward to everyone",
+    "government confirmed"
+  ];
+
+  const absoluteClaims = [
+    "always works",
+    "no side effects",
+    "100 percent true",
+    "everyone must",
+    "guaranteed cure"
+  ];
+
+  const warningMatches = sensationalPhrases.filter(
+    phrase => content.includes(phrase)
+  );
+
+  const absoluteMatches = absoluteClaims.filter(
+    phrase => content.includes(phrase)
+  );
+
+  const warnings = warningMatches.length + absoluteMatches.length;
+
+  if (warnings >= 2) {
+    showResult(
+      "fake",
+      "🚩",
+      "High-Risk Language Detected",
+      "This text contains multiple sensational or absolute claims. That does not prove the news is fake.",
+      [
+        "Find the original source.",
+        "Look for independent confirmation.",
+        "Check evidence before sharing."
+      ]
+    );
+  } else if (warnings === 1) {
+    showResult(
+      "suspicious",
+      "⚠️",
+      "Needs Further Verification",
+      "A warning phrase was found. The claim has not been verified as true or false.",
+      [
+        "Check the publisher and publication date.",
+        "Compare the claim with reliable reporting.",
+        "Find supporting evidence or an official statement."
+      ]
+    );
+  } else {
+    showResult(
+      "genuine",
+      "🔎",
+      "No Listed Warning Phrases Found",
+      "This text did not trigger the demo's keyword rules. This is not evidence that the news is genuine.",
+      [
+        "Verify the original source.",
+        "Check trustworthy independent sources.",
+        "Confirm names, dates, statistics, and context."
+      ]
+    );
+  }
+});
+
+clearBtn.addEventListener("click", () => {
+  newsInput.value = "";
+  counter.textContent = "0 / 10000 characters";
+
+  result.className = "result";
+  result.replaceChildren();
+
+  const icon = document.createElement("div");
+  icon.className = "result-icon";
+  icon.textContent = "🔎";
+
+  const heading = document.createElement("h2");
+  heading.textContent = "Ready to investigate?";
+
+  const description = document.createElement("p");
+  description.textContent = "Your analysis will appear here.";
+
+  result.append(icon, heading, description);
+  newsInput.focus();
+});
